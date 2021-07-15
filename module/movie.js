@@ -1,6 +1,9 @@
 const Joi = require('joi')
 const mongoose = require('mongoose')
 const { genreSchema } = require('./genre')
+const Joi_ObjectId = require('joi-objectid')(Joi) // validate mongodb unique key  
+    //"mongoose.Types.ObjectId.isValid"  //check monogodb _id validation  
+
 
 //movie schema 
 const movieSchema = new mongoose.Schema({
@@ -34,10 +37,22 @@ const movieSchema = new mongoose.Schema({
 const Movie = mongoose.model('Movies', movieSchema)
 
 //joi validation check client side entered data
+// function validateMovie(movie) {
+//     const schema = {
+//         title: Joi.string().required().min(5).max(255),
+//         genreId: Joi.string().required(),
+//         numberInStock: Joi.number().min(0).max(255).required(),
+//         dailyRentalRate: Joi.number().min(0).max(255).required()
+//     }
+
+//     return Joi.validate(movie, schema)
+// }
+//"mongoose.Types.ObjectId.isValid"  //check monogodb _id validation  
+//modified validate function to validate unique mongodb _id 
 function validateMovie(movie) {
     const schema = {
         title: Joi.string().required().min(5).max(255),
-        genreId: Joi.string().required(),
+        genreId: Joi_ObjectId().required(), // unique _id validate 
         numberInStock: Joi.number().min(0).max(255).required(),
         dailyRentalRate: Joi.number().min(0).max(255).required()
     }
