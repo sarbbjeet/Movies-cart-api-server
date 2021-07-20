@@ -21,7 +21,7 @@ const movieSchema = new mongoose.Schema({
     genre: { //hybrid based relational database 
         _id: { //reference(normalization)
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Genres',
+            ref: 'genres',
             required: true
         },
         name: { //embedded relational(denormalation)
@@ -34,7 +34,7 @@ const movieSchema = new mongoose.Schema({
 })
 
 //create collection "Movies"
-const Movie = mongoose.model('Movies', movieSchema)
+const Movie = mongoose.model('movies', movieSchema)
 
 //joi validation check client side entered data
 // function validateMovie(movie) {

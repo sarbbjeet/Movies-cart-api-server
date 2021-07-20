@@ -1,6 +1,8 @@
 const express = require('express')
 const route = express.Router()
 const mongoose = require('mongoose')
+const Fawn = require('fawn')
+Fawn.init(mongoose) //initialize transaction based library 
 const { rentalSchema, rentalValidate, Rental } = require('../module/rental')
 const { Genre } = require('../module/genre')
 const { Movie } = require('../module/movie')
@@ -8,6 +10,7 @@ const { Customer } = require('../module/customer')
 
 route.get('/', async(req, res) => {
     const rentals = await Rental.find()
+        .populate('movie.genre._id')
         // const filterMovies = movies.find(m => m.numberInStock == 10)
         // console.log(filterMovies)
         //console.log(rentals)
@@ -27,12 +30,16 @@ route.post('/', async(req, res) => {
         //movie.save and rental.save both methods should perform successfully so we need
         // to use "Transaction" group of operations 
 
+        // movie.numberInStock = movie.numberInStock - 1
+        //await movie.save()
+
         const rental = new Rental({
-            customer: {
-                id: req.body.customerId,
-                name: customer.name,
-                phone: customer.phone
-            },
+            // customer: {
+            //     id: req.body.customerId,
+            //     name: customer.name,
+            //     phone: customer.phone
+            // },
+            customer,
             movie
             // title: movie.title,
             // genre: movie.genre,
@@ -42,8 +49,17 @@ route.post('/', async(req, res) => {
             // }
         })
 
+
+        //group of operations
+        new Fawn.Task()
+            .save('rentals', rental)
+            .update('movies', { _id: movie._id }, {
+                $inc: { numberInStock: -1 } //remove 1 movie item
+            })
+            .run()
+
         //  const k= await rental.save()
-        res.send(await rental.save())
+        res.send(rental)
     } catch (err) { return res.status(400).send(err.message) }
 })
 

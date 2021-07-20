@@ -10,7 +10,7 @@ const genreSchema = new mongoose.Schema({
 
 })
 
-const Genre = mongoose.model('Genres', genreSchema)
+const Genre = mongoose.model('genres', genreSchema)
 
 //validate genre rest api client side entered json data
 const validateGenre = (genre) => {
