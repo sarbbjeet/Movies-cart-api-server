@@ -8,10 +8,12 @@ app.use(express.json())
 const genreRoute = require('./routes/genres')
 const movieRoute = require('./routes/movies')
 const customerRoute = require('./routes/customers')
+const rentalRoute = require('./routes/rentals')
 
 app.use('/api/genres', genreRoute) //genre route
 app.use('/api/movies', movieRoute) //movie Route
 app.use('/api/customers', customerRoute) //movie Route
+app.use('/api/rentals', rentalRoute) //rental Route
 
 
 mongoose.connect('mongodb://localhost/vidly')
