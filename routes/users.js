@@ -3,6 +3,8 @@ const { User, userSchema, userValidate } = require('../module/user')
 const route = express.Router()
 const _ = require("lodash") //pick selected key from object
 
+const bcrypt = require('bcrypt') //hashing password
+
 route.post('/', async(req, res) => {
     const { error } = userValidate(req.body)
     if (error) return res.status(400).send(error.details[0].message)
@@ -18,7 +20,9 @@ route.post('/', async(req, res) => {
 
         //use of lodash in the place of above code
         user = new User(_.pick(req.body, ['name', 'email', 'password']))
-
+            //hashing password and insert
+        const salt = await bcrypt.genSalt(10)
+        user.password = await bcrypt.hash(user.password, salt)
         await user.save()
 
         //use lodash library to select arguments 
