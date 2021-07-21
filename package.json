@@ -1,22 +1,23 @@
 {
-  "name": "node_mongodb_relational",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.1",
-    "fawn": "^2.1.5",
-    "http": "0.0.1-security",
-    "joi": "^13.1.0",
-    "joi-objectid": "^3.0.1",
-    "mongoose": "^5.13.2",
-    "nodeman": "^1.1.2",
-    "nodemon": "^2.0.12"
-  }
+    "name": "node_mongodb_relational",
+    "version": "1.0.0",
+    "description": "",
+    "main": "nodemon index.js",
+    "scripts": {
+        "test": "nodemon index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.17.1",
+        "fawn": "^2.1.5",
+        "http": "0.0.1-security",
+        "joi": "^13.1.0",
+        "joi-objectid": "^3.0.1",
+        "lodash": "^4.17.21",
+        "mongoose": "^5.13.2",
+        "nodeman": "^1.1.2",
+        "nodemon": "^2.0.12"
+    }
 }
