@@ -25,9 +25,12 @@ route.post('/', async(req, res) => {
         user.password = await bcrypt.hash(user.password, salt)
         await user.save()
 
+        //generate jwt token
+        const token = await user.generateWebToken()
+
         //use lodash library to select arguments 
         // return res.send({ name: user.name, email: user.email }) // return user by hiding password 
-        return res.send(_.pick(user, ['_id', 'name', 'email']))
+        return res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']))
     } catch (err) { res.status(400).send(err.message) }
     //return res.send(await user.save())
 })

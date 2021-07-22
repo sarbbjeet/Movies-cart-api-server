@@ -1,0 +1,5 @@
+// set jwt key by typing export vidly_jwtKey="enter key" in cmd
+
+{
+    "jwtPrivateKey": "vidly_jwtKey"
+}

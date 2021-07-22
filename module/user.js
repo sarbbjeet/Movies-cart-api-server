@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const Joi = require('joi')
+const jwt = require('jsonwebtoken')
+const config = require('config')
 
 const userSchema = new mongoose.Schema({
 
@@ -7,6 +9,21 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true, minlength: 5, maxlength: 255 },
     password: { type: String, required: true, minlength: 5, maxlength: 100 }
 })
+
+userSchema.methods.generateWebToken = async function() {
+    // const token = await jwt.sign({ _id: this._id }, "jwtPrivateKey") //we cannot write jwt key hardcoded
+    //npm i config 
+    //we need to replace hard-coded jwt key with environment variable 
+    //need to create config folder with "default.json" and "custom-environment-variables.json" files
+
+    if (!config.get('jwtPrivateKey')) {
+        // return res.send('private key not found')
+        console.error('private key not found')
+        process.exit(1) //failure
+    }
+    const token = await jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'))
+    return token
+}
 
 const User = mongoose.model('users', userSchema)
 
