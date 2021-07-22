@@ -18,5 +18,6 @@ process.on("unhandledRejection", (ex) => {
     winston.error(ex.message)
 
 })
+app.use('/', route)
 const port = process.env.port || 3000;
 server.listen(port, () => console.log(`server lisenting on port=${port }`))
