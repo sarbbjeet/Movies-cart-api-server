@@ -5,7 +5,6 @@ const mongoose = require('mongoose')
 const { customerSchema, customerValidate, Customer } = require('../module/customer')
 
 const auth = require('../middleware/auth') //verify token 
-
 const admin = require('../middleware/admin') //admin middleware to check user is admin user or not
     // const Genre = mongoose.model('Genre', genreSchema)
 

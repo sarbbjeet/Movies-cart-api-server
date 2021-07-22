@@ -6,11 +6,12 @@ const { genreSchema, validateGenre, Genre } = require('../module/genre')
 // const Genre = mongoose.model('Genre', genreSchema)
 
 
-
-route.get('/', async(req, res) => {
+route.get('/', async(req, res, next) => {
+    // try {  //if we are usign "express-async-errors" library then no need to use try/catch block
     const genre = await Genre.find()
-    console.log(genre)
+    console.lg(genre)
     res.send(genre)
+        // } catch (ex) { next(ex) }
 })
 
 route.post('/', async(req, res) => {
