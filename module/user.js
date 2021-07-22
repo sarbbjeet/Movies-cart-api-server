@@ -7,7 +7,9 @@ const userSchema = new mongoose.Schema({
 
     name: { type: String, required: true, minlength: 5, maxlength: 50 },
     email: { type: String, required: true, unique: true, minlength: 5, maxlength: 255 },
-    password: { type: String, required: true, minlength: 5, maxlength: 100 }
+    password: { type: String, required: true, minlength: 5, maxlength: 100 },
+    isAdmin: { type: Boolean, default: false }
+
 })
 
 userSchema.methods.generateWebToken = async function() {
@@ -21,7 +23,7 @@ userSchema.methods.generateWebToken = async function() {
         console.error('private key not found')
         process.exit(1) //failure
     }
-    const token = await jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'))
+    const token = await jwt.sign({ _id: this._id, admin: this.isAdmin }, config.get('jwtPrivateKey'))
     return token
 }
 
@@ -31,7 +33,8 @@ const userValidate = (user) => {
     const schema = {
         name: Joi.string().required().min(5).max(50),
         email: Joi.string().required().email().min(5).max(255),
-        password: Joi.string().required().min(5).max(255)
+        password: Joi.string().required().min(5).max(255),
+        isAdmin: Joi.boolean()
     }
     return Joi.validate(user, schema)
 }

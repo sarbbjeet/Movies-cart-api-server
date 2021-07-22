@@ -4,9 +4,10 @@ const route = express.Router()
 const mongoose = require('mongoose')
 const { customerSchema, customerValidate, Customer } = require('../module/customer')
 
-const auth = require('../middleware/auth')
+const auth = require('../middleware/auth') //verify token 
 
-// const Genre = mongoose.model('Genre', genreSchema)
+const admin = require('../middleware/admin') //admin middleware to check user is admin user or not
+    // const Genre = mongoose.model('Genre', genreSchema)
 
 const checkValue = ({ val }) => {
     if (val == undefined || val == "")
@@ -66,32 +67,33 @@ route.post('/', auth, async(req, res) => {
 
 
 //edit customer details
-route.put('/:id', async(req, res) => {
-    const customerId = req.params.id;
-    const isValid = mongoose.Types.ObjectId.isValid(customerId) //check validate of mongodb _id 
-    if (!isValid) return res.status(404).send("invalid customerId")
-    const customer = await Customer.findById(customerId) //find customer id exist in customer collection
-    if (!customer) return res.status(404).send("customer id is not exist")
-    const { error } = customerValidate(req.body) //client rest json check validate
-    if (error) return res.status(404).send(error.details[0].message) //validate error message
-        //update customer data
-    customer.name = req.body.name
-    customer.addr = req.body.addr
-    customer.phone = req.body.phone
-    customer.age = req.body.age
-    customer.isGold = req.body.isGold
-    try {
-        const result = await customer.save()
-        res.json(result)
-    } catch (err) {
-        res.status(404).send(err.message)
+route.put('/:id', auth, async(req, res) => {
+        const customerId = req.params.id;
+        const isValid = mongoose.Types.ObjectId.isValid(customerId) //check validate of mongodb _id 
+        if (!isValid) return res.status(404).send("invalid customerId")
+        const customer = await Customer.findById(customerId) //find customer id exist in customer collection
+        if (!customer) return res.status(404).send("customer id is not exist")
+        const { error } = customerValidate(req.body) //client rest json check validate
+        if (error) return res.status(404).send(error.details[0].message) //validate error message
+            //update customer data
+        customer.name = req.body.name
+        customer.addr = req.body.addr
+        customer.phone = req.body.phone
+        customer.age = req.body.age
+        customer.isGold = req.body.isGold
+        try {
+            const result = await customer.save()
+            res.json(result)
+        } catch (err) {
+            res.status(404).send(err.message)
 
-    }
+        }
 
-})
-
-//remove customer with id 
-route.delete('/:id', async(req, res) => {
+    })
+    //remove customer with id
+    //only admin user can delete a customer details
+    // array of middleware added   
+route.delete('/:id', [auth, admin], async(req, res) => {
     const customerId = req.params.id;
     const isValid = mongoose.Types.ObjectId.isValid(customerId) //check validate of mongodb _id 
     if (!isValid) return res.status(404).send("invalid customerId")

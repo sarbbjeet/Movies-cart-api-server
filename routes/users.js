@@ -5,6 +5,22 @@ const _ = require("lodash") //pick selected key from object
 
 const bcrypt = require('bcrypt') //hashing password
 
+const auth = require('../middleware/auth') //middleware to check valid token 
+
+//get current user 
+//with the help of token received from client side
+
+route.get('/me', auth, async(req, res) => {
+    try {
+        //req.user keywoard came from auth middleware
+        const user = await User.findById(req.user._id).select('-password') //deselect password
+        res.send(user)
+
+    } catch (ex) { res.status(400).send(ex.message) }
+
+})
+
+
 route.post('/', async(req, res) => {
     const { error } = userValidate(req.body)
     if (error) return res.status(400).send(error.details[0].message)
@@ -19,7 +35,7 @@ route.post('/', async(req, res) => {
         // })
 
         //use of lodash in the place of above code
-        user = new User(_.pick(req.body, ['name', 'email', 'password']))
+        user = new User(_.pick(req.body, ['name', 'email', 'password', 'isAdmin']))
             //hashing password and insert
         const salt = await bcrypt.genSalt(10)
         user.password = await bcrypt.hash(user.password, salt)
@@ -30,7 +46,7 @@ route.post('/', async(req, res) => {
 
         //use lodash library to select arguments 
         // return res.send({ name: user.name, email: user.email }) // return user by hiding password 
-        return res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']))
+        return res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email', 'isAdmin']))
     } catch (err) { res.status(400).send(err.message) }
     //return res.send(await user.save())
 })
