@@ -8,7 +8,11 @@ require('./startup/db')() //mongodb function call
 require('./startup/routes')(app) //all route defined inside routes module
 require('./startup/logging')(app)
 require('./startup/prod')(app) //production environment 
+const route = express.Router()
 
+route.get('/', (req, res) => {
+    res.send("hello world")
+})
 process.on("unhandledRejection", (ex) => {
     console.error("we got an unhandle rejection")
     winston.error(ex.message)
