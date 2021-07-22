@@ -2,9 +2,14 @@
     "name": "node_mongodb_relational",
     "version": "1.0.0",
     "description": "",
-    "main": "nodemon index.js",
+    "main": "node index.js",
     "scripts": {
-        "test": "nodemon index.js"
+        "dev": "nodemon index.js",
+        "start": "node index.js"
+
+    },
+    "engines": {
+        "node": "10.19.0"
     },
     "keywords": [],
     "author": "",
