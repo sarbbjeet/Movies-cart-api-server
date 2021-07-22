@@ -4,6 +4,8 @@ const route = express.Router()
 const mongoose = require('mongoose')
 const { customerSchema, customerValidate, Customer } = require('../module/customer')
 
+const auth = require('../middleware/auth')
+
 // const Genre = mongoose.model('Genre', genreSchema)
 
 const checkValue = ({ val }) => {
@@ -41,7 +43,10 @@ route.get('/', async(req, res) => {
     } catch (err) { res.send(customers) } //something went wrong with name or id
 })
 
-route.post('/', async(req, res) => {
+//add customer if client have valid token 
+//auth is a middelware function to verify token 
+//to add new customer client should pass valid token 
+route.post('/', auth, async(req, res) => {
 
     const { error } = customerValidate(req.body)
 
