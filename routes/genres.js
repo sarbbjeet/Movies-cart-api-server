@@ -2,14 +2,16 @@ const express = require('express')
 const route = express.Router()
 const mongoose = require('mongoose')
 const { genreSchema, validateGenre, Genre } = require('../module/genre')
+const winston = require('winston')
 
 // const Genre = mongoose.model('Genre', genreSchema)
-
 
 route.get('/', async(req, res, next) => {
     // try {  //if we are usign "express-async-errors" library then no need to use try/catch block
     const genre = await Genre.find()
-    console.lg(genre)
+        //console.lg(genre)
+    winston.info(genre)
+
     res.send(genre)
         // } catch (ex) { next(ex) }
 })
