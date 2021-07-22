@@ -19,5 +19,5 @@ process.on("unhandledRejection", (ex) => {
 
 })
 app.use('/', route)
-const port = process.env.port || 3000;
+const port = process.env.port;
 server.listen(port, () => console.log(`server lisenting on port=${port }`))
