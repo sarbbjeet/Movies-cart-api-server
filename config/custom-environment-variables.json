@@ -2,5 +2,7 @@
 
 {
     "jwtPrivateKey": "vidly_jwtKey",
-    "db": "vidly_db"
+    "db": "vidly_db",
+    "user": "username",
+    "pass": "password"
 }
