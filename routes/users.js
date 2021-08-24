@@ -7,8 +7,8 @@ const bcrypt = require('bcrypt') //hashing password
 
 const auth = require('../middleware/auth') //middleware to check valid token 
 
-//get current user 
-//with the help of token received from client side
+
+//access below route  by using web token  
 
 route.get('/me', auth, async(req, res) => {
     try {

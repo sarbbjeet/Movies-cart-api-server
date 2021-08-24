@@ -14,13 +14,33 @@ route.get('/', async(req, res) => {
     res.send(movies)
 })
 
-route.post('/', async(req, res) => {
-
+route.put('/:id', async(req, res) => {
     const { error } = validateMovie(req.body)
     if (error) return res.status(400).send(error.details[0].message)
-        //try {
     const genre = await Genre.findById(req.body.genreId)
     if (!genre) return res.status(404).send("invalid genre...")
+    let movie = await Movie.findById(req.params.id)
+    if (!movie) return res.status(404).send("invalid movie id...")
+    movie.title = req.body.title;
+    movie.genre = { //hybrid relational database 
+        _id: req.body.genreId, //reference
+        name: genre.name //embedded 
+    }
+    movie.numberInStock = req.body.numberInStock
+    movie.dailyRentalRate = req.body.dailyRentalRate
+    try {
+        const result = await movie.save()
+        res.send(result)
+    } catch (err) { res.status(404).json({ success: false, message: err.message }) } //err.message // error validation
+})
+
+
+route.post('/', async(req, res) => {
+    const { error } = validateMovie(req.body)
+    if (error) return res.status(400).json({ success: false, message: error.details[0].message })
+        //try {
+    const genre = await Genre.findById(req.body.genreId)
+    if (!genre) return res.status(404).json({ success: false, message: "invalid genre..." })
     const movie = new Movie({
         title: req.body.title,
         genre: { //hybrid relational database 
@@ -40,7 +60,14 @@ route.post('/', async(req, res) => {
     try {
         const result = await movie.save()
         res.send(result)
-    } catch (err) { res.status(404).send(err.message) } //err.message // error validation
+    } catch (err) { res.status(404).json({ success: false, message: err.message }) } //err.message // error validation
 })
+
+route.delete('/:id', async(req, res) => {
+    let movie = await Movie.findById(req.params.id)
+    if (!movie) return res.status(404).json({ success: false, message: 'invaild movie id' })
+    return res.json(await Movie.findByIdAndRemove(movie._id)) || ({ success: true, message: `successfully delete ${movie.title}` })
+})
+
 
 module.exports = route
