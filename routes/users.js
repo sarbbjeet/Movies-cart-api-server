@@ -43,10 +43,11 @@ route.post('/', async(req, res) => {
 
         //generate jwt token
         const token = await user.generateWebToken()
+        if (!token) res.status(400).json({ success: false, message: "server error, web token is not generated" })
 
         //use lodash library to select arguments 
         // return res.send({ name: user.name, email: user.email }) // return user by hiding password 
-        return res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email', 'isAdmin']))
+        return res.header('x-auth-token', token).json(_.pick(user, ['_id', 'name', 'email', 'isAdmin']))
     } catch (err) { res.status(400).send(err.message) }
     //return res.send(await user.save())
 })

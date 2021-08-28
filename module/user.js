@@ -20,8 +20,9 @@ userSchema.methods.generateWebToken = async function() {
 
     if (!config.get('jwtPrivateKey')) {
         // return res.send('private key not found')
-        console.error('private key not found')
-        process.exit(1) //failure
+        return null
+            // console.error('private key not found')
+            // process.exit(1) //failure
     }
     const token = await jwt.sign({ _id: this._id, admin: this.isAdmin }, config.get('jwtPrivateKey'))
     return token
