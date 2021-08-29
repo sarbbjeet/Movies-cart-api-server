@@ -3,6 +3,7 @@ const route = express.Router()
 const mongoose = require('mongoose')
 const { movieSchema, validateMovie, Movie } = require('../module/movie')
 const { Genre } = require('../module/genre')
+const auth = require('../middleware/auth')
 
 route.get('/', async(req, res) => {
     const movies = await Movie.find()
@@ -14,7 +15,8 @@ route.get('/', async(req, res) => {
     res.send(movies)
 })
 
-route.put('/:id', async(req, res) => {
+//secure middleware to check token 
+route.put('/:id', auth, async(req, res) => {
     const { error } = validateMovie(req.body)
     if (error) return res.status(400).send(error.details[0].message)
     const genre = await Genre.findById(req.body.genreId)
@@ -35,7 +37,7 @@ route.put('/:id', async(req, res) => {
 })
 
 
-route.post('/', async(req, res) => {
+route.post('/', auth, async(req, res) => {
     const { error } = validateMovie(req.body)
     if (error) return res.status(400).json({ success: false, message: error.details[0].message })
         //try {
@@ -63,7 +65,7 @@ route.post('/', async(req, res) => {
     } catch (err) { res.status(404).json({ success: false, message: err.message }) } //err.message // error validation
 })
 
-route.delete('/:id', async(req, res) => {
+route.delete('/:id', auth, async(req, res) => {
     let movie = await Movie.findById(req.params.id)
     if (!movie) return res.status(404).json({ success: false, message: 'invaild movie id' })
     return res.json(await Movie.findByIdAndRemove(movie._id)) || ({ success: true, message: `successfully delete ${movie.title}` })
