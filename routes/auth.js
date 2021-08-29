@@ -16,21 +16,20 @@ const authValidate = (user) => {
 //match email and password to check authentication  
 route.post('/', async(req, res) => {
     const { error } = authValidate(req.body)
-    if (error) return res.status(400).send(error.details[0].message)
+    if (error) return res.status(400).json({ success: false, message: error.details[0].message })
     try {
         let user = await User.findOne({ email: req.body.email })
-        if (!user) return res.status(400).send("email id is wrong ")
+        if (!user) return res.status(400).json({ success: false, message: "email id is wrong" })
         const validPassword = await bcrypt.compare(req.body.password, user.password)
-        if (!validPassword) return res.status(400).send("password is invalid")
-
-
-
+        if (!validPassword) return res.status(400).json({ success: false, message: "password is invalid" })
 
         //next step to return header with json token 
         //   const token = await jwt.sign({ _id: this._id }, "jwtPrivateKey")
         const token = await user.generateWebToken()
             // return res.send(await user.generateWebToken())
-        return res.header('x-auth-token', token).send(_.pick(user, ['_id', "name", "email"]))
+        return res.header('x-auth-token', token)
+            .header('Access-Control-Expose-Headers', 'x-auth-token')
+            .json(_.pick(user, ['_id', "name", "email"]))
 
     } catch (err) { return res.status(400).send(err.message) }
 
