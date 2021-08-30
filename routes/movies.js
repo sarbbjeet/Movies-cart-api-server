@@ -19,11 +19,11 @@ route.get('/', async(req, res) => {
 //secure middleware to check token 
 route.put('/:id', auth, async(req, res) => {
     const { error } = validateMovie(req.body)
-    if (error) return res.status(400).send(error.details[0].message)
+    if (error) return res.status(400).json({ success: false, message: error.details[0].message })
     const genre = await Genre.findById(req.body.genreId)
-    if (!genre) return res.status(404).send("invalid genre...")
+    if (!genre) return res.status(404).json({ success: false, message: "invaild genre ..." })
     let movie = await Movie.findById(req.params.id)
-    if (!movie) return res.status(404).send("invalid movie id...")
+    if (!movie) return res.status(404).json({ success: false, message: "invalid movie id" })
     movie.title = req.body.title;
     movie.genre = { //hybrid relational database 
         _id: req.body.genreId, //reference

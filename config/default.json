@@ -1,5 +1,5 @@
 {
-    "jwtPrivateKey": "",
+    "jwtPrivateKey": "my_key",
     "db": "mongodb://localhost/vidly",
     "user": "",
     "pass": ""
