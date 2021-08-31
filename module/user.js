@@ -31,6 +31,7 @@ userSchema.methods.generateWebToken = async function() {
             name: this.name,
             admin: this.isAdmin,
             isVerified: this.isVerified,
+            email: this.email,
         },
         config.get("jwtPrivateKey")
     );

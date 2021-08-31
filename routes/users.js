@@ -68,6 +68,26 @@ route.post("/", async(req, res) => {
     //return res.send(await user.save())
 });
 
+//resend verification link
+route.post("/verification-link", async(req, res) => {
+    try {
+        const { user } = req.body;
+        const secretCodeObject = await secretCodeHandler(user.email);
+        if (!secretCodeObject.success)
+            responseToServe(400, res, secretCodeObject.message);
+
+        const baseUrl = `${req.protocol}://${req.get("host")}`;
+        let subject = "Your Activation Link ...";
+
+        let body = `Please use the following link within the next 10 minutes to activate 
+                  your account: ${baseUrl}/api/users/${user._id}/${secretCodeObject.message.code}`;
+        await mailSender(subject, body, user.email); //send mail with verification code otp
+        responseToServe(200, res, "successfully sent verfication email", true);
+    } catch (ex) {
+        responseToServe(400, res, ex.message);
+    }
+});
+
 //activate account
 
 route.get("/:id/:code", async(req, res) => {
