@@ -1,6 +1,7 @@
 # Backend code for the movies app that includes node js, express, jwt, bcrypt, and other features.
 Backend built with Node.js/Express and MongoDB, with pre-defined authentication, email verification, and account deletion.
 # ready to use
+this server is deployed on heroku https://movies-api-server11.herokuapp.com/
 
 # Features
 - Mongodb (local and cloud)
