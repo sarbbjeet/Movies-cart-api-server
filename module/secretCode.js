@@ -9,12 +9,12 @@ const secretSchema = new mongoose.Schema({
 
 const SecretCode = mongoose.model("secretCode", secretSchema);
 
-const secretValidate = (_code) => {
+const secretValidate = (data) => {
     const schema = {
         code: Joi.string().required(),
         email: Joi.string().required().email(),
     };
-    return Joi.validate(_code, schema);
+    return Joi.validate(data, schema);
 };
 
 module.exports = { SecretCode, secretSchema, secretValidate };
