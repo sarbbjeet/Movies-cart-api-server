@@ -6,16 +6,14 @@ const transporter = nodemailer.createTransport({
     port: 465,
     secure: true,
     auth: {
-        user: "devcodetest1@gmail.com",
-        pass: "Shaktiman@123",
-        // user: config.get("user"), //or process.env.username
-        // pass: config.get("pass"), //or process.env.password,
+        user: config.get("user"), //or process.env.username
+        pass: config.get("pass"), //or process.env.password,
     },
 });
 
 const mailSender = async({ subject, body, receiver, html = "" }) => {
     return await transporter.sendMail({
-        from: "devcodetest1@gmail.com", //env variable saved email address
+        from: process.env.username, //env variable saved email address
         to: receiver,
         subject: subject,
         text: body,

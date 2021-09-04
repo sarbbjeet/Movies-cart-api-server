@@ -51,7 +51,7 @@ route.post("/", async(req, res) => {
 
         let body = `Please use the following link within the next 10 minutes to activate 
               your account: ${baseUrl}/api/users/${user._id}/${secretCodeObject.message.code}`;
-        // await mailSender({ subject, body, receiver: user.email }); //send mail with verification code otp
+        await mailSender({ subject, body, receiver: user.email }); //send mail with verification code otp
 
         await user.save(); //generate token before save user to database
         //use lodash library to select arguments
