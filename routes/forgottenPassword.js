@@ -6,6 +6,7 @@ const Joi = require("joi");
 const randomCode = require("crypto-random-string");
 const { mailSender } = require("../utils/mailSender");
 const { SecretCode } = require("../module/secretCode");
+const bCrypt = require("bcrypt");
 
 route.post("/find-account", async(req, res) => {
     const email = req.body.email;
@@ -65,6 +66,25 @@ route.post("/verify-secret-code", async(req, res) => {
                 .json({ success: false, message: "wrong security code" });
         await SecretCode.deleteMany({ email });
         return res.json({ success: true, message: "Great code matched" });
+    } catch (ex) {
+        res.status(400).json({ success: false, message: ex.message });
+    }
+});
+
+//update password
+route.post("/update-password", async(req, res) => {
+    const { email, password } = req.body;
+    let user = await User.findOne({ email });
+    if (!user)
+        res.status(400).json({ success: false, message: "user does not exist" });
+    try {
+        const salt = await bCrypt.genSalt(4);
+        user.password = await bCrypt.hash(password, salt);
+        await user.save();
+        return res.json({
+            success: true,
+            message: "successfully password updated",
+        });
     } catch (ex) {
         res.status(400).json({ success: false, message: ex.message });
     }
