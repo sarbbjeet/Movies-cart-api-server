@@ -25,7 +25,7 @@ route.get("/me", auth, async(req, res) => {
         res.status(400).json({ success: false, message: ex.message });
     }
 });
-
+//register new user
 route.post("/", async(req, res) => {
     const { error } = userValidate(req.body);
     if (error) responseToServe(400, res, error.details[0].message);
@@ -81,7 +81,7 @@ route.post("/verification-link", async(req, res) => {
 
         let body = `Please use the following link within the next 10 minutes to activate 
                   your account: ${baseUrl}/api/users/${user._id}/${secretCodeObject.message.code}`;
-        await mailSender(subject, body, user.email); //send mail with verification code otp
+        await mailSender({ subject, body, receiver: user.email }); //send mail with verification code otp
         responseToServe(200, res, "successfully sent verfication email", true);
     } catch (ex) {
         responseToServe(400, res, ex.message);
@@ -89,7 +89,6 @@ route.post("/verification-link", async(req, res) => {
 });
 
 //activate account
-
 route.get("/:id/:code", async(req, res) => {
     const code = req.params.code;
     const id = req.params.id;
