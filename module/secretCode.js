@@ -2,7 +2,7 @@ const Joi = require("joi");
 const mongoose = require("mongoose");
 
 const secretSchema = new mongoose.Schema({
-    createdDate: { type: Date, default: Date.now(), expires: 1800 },
+    createdDate: { type: Date, default: Date.now(), expires: 3600 },
     email: { type: String, required: true },
     code: { type: String, required: true },
 });
